@@ -100,8 +100,8 @@
             <div class="form-row">
               <label>Algorithm</label>
               <div class="radio-group">
-                <label class="radio-opt"><input type="radio" name="kg-algo" value="RSA" checked onchange="toggleKeySize()"> RSA-PSS</label>
-                <label class="radio-opt"><input type="radio" name="kg-algo" value="ECDSA" onchange="toggleKeySize()"> ECDSA P-256</label>
+                <label class="radio-opt"><input type="radio" name="kg-algo" value="RSA" checked onchange="toggleKeySize()"> RSA</label>
+                <label class="radio-opt"><input type="radio" name="kg-algo" value="ECDSA" onchange="toggleKeySize()"> ECDSA</label>
               </div>
             </div>
 
@@ -217,8 +217,8 @@
             <div class="form-row">
               <label>Algorithm</label>
               <div class="radio-group">
-                <label class="radio-opt"><input type="radio" name="sign-algo" value="RSA" checked> RSA-PSS</label>
-                <label class="radio-opt"><input type="radio" name="sign-algo" value="ECDSA"> ECDSA P-256</label>
+                <label class="radio-opt"><input type="radio" name="sign-algo" value="RSA" checked> RSA</label>
+                <label class="radio-opt"><input type="radio" name="sign-algo" value="ECDSA"> ECDSA</label>
               </div>
             </div>
 
@@ -332,7 +332,7 @@
       <div class="section-header">
         <div class="breadcrumb">DSS // <span>Benchmarks</span></div>
         <h1>⚡ <span class="accent">Performance</span> Comparison</h1>
-        <p>Live benchmark of RSA-PSS (2048-bit) vs ECDSA (P-256) — key generation, signing, and verification — running in your browser.</p>
+        <p>Live benchmark of RSA (2048-bit) vs ECDSA — key generation, signing, and verification — running in your browser.</p>
       </div>
 
       <div class="card" style="margin-bottom:20px">
@@ -382,8 +382,8 @@
             <thead>
               <tr>
                 <th>Metric</th>
-                <th><span class="chip chip-rsa">RSA-PSS 2048</span></th>
-                <th><span class="chip chip-ecdsa">ECDSA P-256</span></th>
+                <th><span class="chip chip-rsa">RSA 2048</span></th>
+                <th><span class="chip chip-ecdsa">ECDSA</span></th>
                 <th>Winner</th>
               </tr>
             </thead>
@@ -394,7 +394,7 @@
         </div>
         <div id="perf-note" style="display:none;margin-top:14px;padding:12px 16px;background:rgba(0,200,255,0.05);border-radius:8px;font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.8">
           <strong style="color:var(--primary)">Key Insight:</strong>
-          ECDSA P-256 provides equivalent security to RSA-2048 with much smaller keys and signatures.
+          ECDSA provides equivalent security to RSA-2048 with much smaller keys and signatures.
           Timings vary by hardware and browser crypto engine implementation.
         </div>
       </div>
