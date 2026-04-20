@@ -216,7 +216,7 @@ async function generateKeys() {
     if (algo === 'RSA') {
       const sz = parseInt(document.querySelector('input[name="rsa-size"]:checked').value);
       keyPair = await crypto.subtle.generateKey(
-        { name:'RSA-PSS', modulusLength:sz, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
+        { name:'RSA', modulusLength:sz, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' },
         true, ['sign','verify']
       );
     } else {
@@ -238,8 +238,8 @@ async function generateKeys() {
     showEl('kg-priv-section'); showEl('kg-sep'); showEl('kg-pub-section');
 
     const lbl = algo === 'RSA'
-      ? `RSA-PSS ${document.querySelector('input[name="rsa-size"]:checked').value}-bit`
-      : 'ECDSA P-256';
+      ? `RSA ${document.querySelector('input[name="rsa-size"]:checked').value}-bit`
+      : 'ECDSA';
     setResult('kg-result', `✅ ${lbl} key pair generated!\nLabel: ${label}\nPrivate: ${label}_private.pem\nPublic:  ${label}_public.pem`, 'success');
     addAuditEntry('Key Generation', `${label}_keypair`, 'Success', `Algorithm: ${algo}`);
     showToast(`✅ ${algo} key pair generated`, 'success');
@@ -288,8 +288,8 @@ async function doSign() {
     let privateKey, signature;
 
     if (algo === 'RSA') {
-      privateKey = await crypto.subtle.importKey('pkcs8', privBuf, { name:'RSA-PSS', hash:'SHA-256' }, false, ['sign']);
-      signature  = await crypto.subtle.sign({ name:'RSA-PSS', saltLength:32 }, privateKey, fileBuf);
+      privateKey = await crypto.subtle.importKey('pkcs8', privBuf, { name:'RSA', hash:'SHA-256' }, false, ['sign']);
+      signature  = await crypto.subtle.sign({ name:'RSA', saltLength:32 }, privateKey, fileBuf);
     } else {
       privateKey = await crypto.subtle.importKey('pkcs8', privBuf, { name:'ECDSA', namedCurve:'P-256' }, false, ['sign']);
       signature  = await crypto.subtle.sign({ name:'ECDSA', hash:'SHA-256' }, privateKey, fileBuf);
@@ -370,8 +370,8 @@ async function doVerify(tamperDemo) {
 
     try {
       if (algo === 'RSA') {
-        const pk = await crypto.subtle.importKey('spki', pubBuf, { name:'RSA-PSS', hash:'SHA-256' }, false, ['verify']);
-        cryptoValid = await crypto.subtle.verify({ name:'RSA-PSS', saltLength:32 }, pk, sigBytes, origBuf);
+        const pk = await crypto.subtle.importKey('spki', pubBuf, { name:'RSA', hash:'SHA-256' }, false, ['verify']);
+        cryptoValid = await crypto.subtle.verify({ name:'RSA', saltLength:32 }, pk, sigBytes, origBuf);
       } else {
         const pk = await crypto.subtle.importKey('spki', pubBuf, { name:'ECDSA', namedCurve:'P-256' }, false, ['verify']);
         cryptoValid = await crypto.subtle.verify({ name:'ECDSA', hash:'SHA-256' }, pk, sigBytes, origBuf);
@@ -448,15 +448,15 @@ async function runBenchmark() {
     setP('RSA — key generation...');
     let rsaKP;
     m.RSA.keygen = await avg(async () => {
-      rsaKP = await crypto.subtle.generateKey({ name:'RSA-PSS', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' }, true, ['sign','verify']);
+      rsaKP = await crypto.subtle.generateKey({ name:'RSA', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256' }, true, ['sign','verify']);
     }, iters);
 
     setP('RSA — signing...');
     let rsaSig;
-    m.RSA.sign = await avg(async () => { rsaSig = await crypto.subtle.sign({ name:'RSA-PSS', saltLength:32 }, rsaKP.privateKey, testData); }, iters);
+    m.RSA.sign = await avg(async () => { rsaSig = await crypto.subtle.sign({ name:'RSA', saltLength:32 }, rsaKP.privateKey, testData); }, iters);
 
     setP('RSA — verification...');
-    m.RSA.verify = await avg(async () => { await crypto.subtle.verify({ name:'RSA-PSS', saltLength:32 }, rsaKP.publicKey, rsaSig, testData); }, iters);
+    m.RSA.verify = await avg(async () => { await crypto.subtle.verify({ name:'RSA', saltLength:32 }, rsaKP.publicKey, rsaSig, testData); }, iters);
 
     const rPr = await crypto.subtle.exportKey('pkcs8', rsaKP.privateKey);
     const rPu = await crypto.subtle.exportKey('spki',  rsaKP.publicKey);
